@@ -1,0 +1,627 @@
+DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parzivalled - Соціальні мережі</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, #0057B7, #1a73e8, #FFD700, #ffa500);
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.15;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-40%, -60%) rotate(90deg); }
+            50% { transform: translate(-60%, -40%) rotate(180deg); }
+            75% { transform: translate(-40%, -50%) rotate(270deg); }
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(0, 87, 183, 0.4), transparent);
+            top: 20%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .particle:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+            top: 60%;
+            right: 15%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .particle:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(0, 87, 183, 0.5), transparent);
+            bottom: 20%;
+            left: 20%;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-30px) translateX(20px); }
+            50% { transform: translateY(-15px) translateX(-20px); }
+            75% { transform: translateY(-40px) translateX(10px); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 35px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            animation: containerFadeIn 0.8s ease-in-out;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: profileSlideIn 1s ease-in-out;
+        }
+
+        @keyframes profileSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-image {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            border: 5px solid transparent;
+            background: 
+                linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #0057B7, #FFD700, #0057B7) border-box;
+            overflow: hidden;
+            position: relative;
+            animation: profilePulse 3s ease-in-out infinite;
+            box-shadow: 
+                0 10px 40px rgba(0, 87, 183, 0.4),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes profilePulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 10px 40px rgba(0, 87, 183, 0.4),
+                    0 0 30px rgba(255, 215, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 
+                    0 15px 50px rgba(0, 87, 183, 0.6),
+                    0 0 40px rgba(255, 215, 0, 0.5);
+            }
+        }
+
+        .profile-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 38px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0057B7, #1a73e8, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 2s ease-in-out infinite;
+            letter-spacing: -1px;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 87, 183, 0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 17px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #0057B7, #1a73e8);
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0, 87, 183, 0.3);
+            animation: badgeBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes badgeBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .link-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 22px 30px;
+            background: linear-gradient(135deg, #0057B7, #0066CC);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 19px;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 8px 25px rgba(0, 87, 183, 0.4),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: buttonSlideIn 0.6s ease-in-out backwards;
+        }
+
+        .link-button:nth-child(1) { animation-delay: 0.2s; }
+        .link-button:nth-child(2) { animation-delay: 0.4s; }
+        .link-button:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes buttonSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .link-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .link-button:hover::before {
+            left: 100%;
+        }
+
+        .link-button::after {
+            content: '→';
+            position: absolute;
+            right: 25px;
+            font-size: 24px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .link-button:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .link-button:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 
+                0 15px 40px rgba(0, 87, 183, 0.6),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2),
+                0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .link-button:active {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 
+                0 8px 20px rgba(0, 87, 183, 0.5),
+                inset 0 -2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .link-button.youtube {
+            background: linear-gradient(135deg, #FF0000, #CC0000, #8B0000);
+            box-shadow: 
+                0 8px 25px rgba(255, 0, 0, 0.4),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-button.youtube:hover {
+            box-shadow: 
+                0 15px 40px rgba(255, 0, 0, 0.6),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2),
+                0 0 30px rgba(255, 0, 0, 0.4);
+        }
+
+        .link-button.instagram {
+            background: linear-gradient(135deg, #E4405F, #C13584, #833AB4, #5851DB);
+            box-shadow: 
+                0 8px 25px rgba(228, 64, 95, 0.4),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-button.instagram:hover {
+            box-shadow: 
+                0 15px 40px rgba(228, 64, 95, 0.6),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2),
+                0 0 30px rgba(195, 53, 132, 0.5);
+        }
+
+        .link-button.telegram {
+            background: linear-gradient(135deg, #0088CC, #006699, #004d73);
+            box-shadow: 
+                0 8px 25px rgba(0, 136, 204, 0.4),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-button.telegram:hover {
+            box-shadow: 
+                0 15px 40px rgba(0, 136, 204, 0.6),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.2),
+                0 0 30px rgba(0, 136, 204, 0.4);
+        }
+
+        .icon {
+            font-size: 28px;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+            animation: iconBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .link-button:hover .icon {
+            animation: iconSpin 0.6s ease-in-out;
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 87, 183, 0.1), rgba(255, 215, 0, 0.1));
+            border-radius: 20px;
+            border: 2px solid rgba(0, 87, 183, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0057B7, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            color: #999;
+            font-size: 14px;
+            animation: footerFadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes footerFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .social-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 13px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Sparkle effect */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleFloat 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { 
+                opacity: 0;
+                transform: translateY(0) scale(0);
+            }
+            50% { 
+                opacity: 1;
+                transform: translateY(-50px) scale(1);
+            }
+        }
+
+        .container::before,
+        .container::after {
+            content: '✨';
+            position: absolute;
+            font-size: 20px;
+            animation: sparkleRotate 4s linear infinite;
+        }
+
+        .container::before {
+            top: 20px;
+            right: 30px;
+        }
+
+        .container::after {
+            bottom: 20px;
+            left: 30px;
+            animation-delay: 2s;
+        }
+
+        @keyframes sparkleRotate {
+            0%, 100% { 
+                opacity: 0.3;
+                transform: rotate(0deg) scale(0.8);
+            }
+            50% { 
+                opacity: 1;
+                transform: rotate(180deg) scale(1.2);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 25px;
+                border-radius: 30px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+
+            .link-button {
+                padding: 18px 25px;
+                font-size: 17px;
+            }
+
+            .stats {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="bg-gradient"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <div class="profile">
+            <div class="profile-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%230057B7' width='100' height='50'/%3E%3Crect fill='%23FFD700' y='50' width='100' height='50'/%3E%3Ctext x='50' y='60' font-size='45' text-anchor='middle' fill='white' font-weight='bold' font-family='Arial'%3EP%3C/text%3E%3C/svg%3E" alt="Parzivalled">
+            </div>
+            <h1>Parzivalled</h1>
+            <p class="subtitle">Контент-креатор і стрімер</p>
+            <span class="badge">🔥 Активний</span>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Платформи</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Контент</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Онлайн</div>
+            </div>
+        </div>
+
+        <div class="links">
+            <div class="link-button youtube" onclick="window.location.replace('https://www.youtube.com/@ostocer')">
+                <span class="icon">▶️</span>
+                <span>YouTube</span>
+            </div>
+
+            <div class="link-button instagram" onclick="window.location.replace('https://www.instagram.com/n1k1tos.as?igsh=Z3VjY2d1MWprZm56')">
+                <span class="icon">📸</span>
+                <span>Instagram</span>
+            </div>
+
+            <div class="link-button telegram" onclick="window.location.replace('https://t.me/berlogarozdumiv')">
+                <span class="icon">✈️</span>
+                <span>Telegram</span>
+            </div>
+        </div>
+
+        <div class="social-hint">
+            <span>👆</span>
+            <span>Обирай свою платформу</span>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Parzivalled</p>
+            <p style="margin-top: 5px; font-size: 12px;">Зроблено з 💙💛</p>
+        </div>
+    </div>
+
+    <script>
+        // Add sparkle effects randomly
+        function createSparkle() {
+            const container = document.querySelector('.container');
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 3000);
+        }
+
+        setInterval(createSparkle, 800);
+
+        // Add extra interactivity
+        document.querySelectorAll('.link-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.03)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '1') {
+                window.location.replace('https://www.youtube.com/@ostocer');
+            } else if (e.key === '2') {
+                window.location.replace('https://www.instagram.com/n1k1tos.as?igsh=Z3VjY2d1MWprZm56');
+            } else if (e.key === '3') {
+                window.location.replace('https://t.me/berlogarozdumiv');
+            }
+        });
+    </script>
+</body>
+</html>
